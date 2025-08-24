@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TopUpin — Top Up Game Cepat & Aman</title>
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    :root{
+      --bg:#0b0f1a;
+      --bg-soft:#0f1424;
+      --card:#131a2e;
+      --card-2:#111827;
+      --text:#e7eefb;
+      --muted:#98a2b3;
+      --primary:#6ee7f0; /* cyan */
+      --primary-2:#7c3aed; /* violet */
+      --accent:#22c55e; /* green */
+      --danger:#ef4444; /* red */
+      --warning:#f59e0b; /* amber */
+      --shadow: 0 10px 30px rgba(0,0,0,.35);
+      --radius: 18px;
+      --radius-sm: 12px;
+      --radius-lg: 26px;
+      --grad-1: linear-gradient(135deg, rgba(124,58,237,.35), rgba(110,231,240,.25) 60%, rgba(34,197,94,.25));
+      --grad-2: linear-gradient(135deg, #7c3aed, #06b6d4);
+      --glass: rgba(255,255,255,0.06);
+      --outline: 1px solid rgba(255,255,255,.06);
+    }
+
+    *{ box-sizing:border-box }
+    html{ scroll-behavior:smooth }
+    body{
+      margin:0; font-family:'Inter',system-ui,Segoe UI,Roboto,Helvetica,Arial,sans-serif; color:var(--text);
+      background:
+        radial-gradient(1200px 600px at 10% -10%, rgba(124,58,237,.25), transparent 60%),
+        radial-gradient(900px 500px at 90% 10%, rgba(6,182,212,.25), transparent 60%),
+        radial-gradient(900px 500px at 50% 110%, rgba(34,197,94,.2), transparent 60%),
+        var(--bg);
+    }
+    a{ color:inherit; text-decoration:none }
+
+    /* Header */
+    header{
+      position:sticky; top:0; z-index:50; backdrop-filter:saturate(160%) blur(10px);
+      background:linear-gradient(180deg, rgba(3,7,18,.85), rgba(3,7,18,.55));
+      border-bottom:var(--outline);
+    }
+    .container{ width:min(1200px, 92vw); margin-inline:auto }
+    .nav{
+      display:flex; align-items:center; justify-content:space-between; padding:14px 0;
+    }
+    .brand{
+      display:flex; align-items:center; gap:12px; font-weight:800; letter-spacing:.3px;
+    }
+    .logo{
+      width:40px; height:40px; border-radius:12px; background:var(--grad-2); box-shadow:0 10px 20px rgba(124,58,237,.35);
+      display:grid; place-items:center; position:relative; overflow:hidden;
+    }
+    .logo::after{ content:"★"; font-size:18px; color:white; filter:drop-shadow(0 2px 6px rgba(0,0,0,.45)); }
+    .nav a{ color:var(--muted); font-weight:600; margin-left:24px; padding:8px 12px; border-radius:12px; transition:all .25s ease }
+    .nav a:hover{ color:var(--text); background:var(--glass) }
+
+    /* Hero */
+    .hero{
+      position:relative; overflow:hidden; padding:80px 0 40px; isolation:isolate;
+    }
+    .hero-grid{ display:grid; grid-template-columns:1.2fr .8fr; gap:28px; align-items:center }
+    .hero h1{
+      font-size: clamp(28px, 4vw, 54px); line-height:1.05; margin:0 0 16px; font-weight:900;
+      letter-spacing:-.5px; text-shadow: 0 6px 30px rgba(0,0,0,.35);
+    }
+    .hero p{ margin:0 0 26px; color:var(--muted); font-size:clamp(14px,1.4vw,18px) }
+    .cta{
+      display:flex; gap:12px; flex-wrap:wrap
+    }
+    .btn{
+      border:0; padding:14px 18px; border-radius:14px; font-weight:700; cursor:pointer; transition:transform .15s ease, box-shadow .25s ease, background .25s ease, color .25s ease;
+      background:var(--grad-2); color:#fff; box-shadow:0 18px 50px rgba(124,58,237,.35);
+    }
+    .btn:hover{ transform:translateY(-2px); box-shadow:0 24px 60px rgba(124,58,237,.45) }
+    .btn.secondary{ background:transparent; border:1px solid rgba(255,255,255,.15); color:var(--text) }
+    .btn.secondary:hover{ background:rgba(255,255,255,.06) }
+
+    .hero-art{
+      position:relative; height:380px; border-radius:var(--radius-lg); background:radial-gradient(120% 100% at 70% 30%, rgba(255,255,255,.08), rgba(255,255,255,.02) 55%), var(--grad-2);
+      box-shadow: var(--shadow); overflow:hidden;
+    }
+    .glow{
+      position:absolute; inset:-40%; background: conic-gradient(from 120deg, rgba(255,255,255,.1), transparent, rgba(255,255,255,.1)); filter: blur(40px); animation: spin 12s linear infinite;
+    }
+    @keyframes spin{ to{ transform: rotate(360deg) } }
+
+    /* Section */
+    section{ padding:36px 0 }
+    .section-title{ font-size:22px; font-weight:800; margin:8px 0 18px }
+    .muted{ color:var(--muted) }
+
+    /* Cards Grid */
+    .grid{ display:grid; gap:16px }
+
+    /* Game selector */
+    .games{
+      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    }
+    .card{
+      background:linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03)); border:var(--outline); border-radius:var(--radius);
+      padding:14px; display:flex; gap:14px; align-items:center; cursor:pointer; transition: all .25s ease; position:relative; overflow:hidden;
+    }
+    .card:hover{ transform:translateY(-4px); box-shadow:0 18px 40px rgba(0,0,0,.35) }
+    .card.selected{ outline:2px solid rgba(110,231,240,.7); box-shadow:0 0 0 6px rgba(124,58,237,.15) inset }
+    .icon{
+      width:46px; height:46px; border-radius:12px; flex:0 0 46px; display:grid; place-items:center;
+      background:var(--grad-1); border:1px solid rgba(255,255,255,.12);
+    }
+    .icon svg{ width:26px; height:26px; opacity:.95 }
+    .card .label{ font-weight:700 }
+    .tag{ font-size:12px; color:var(--muted) }
+
+    /* Form area */
+    .form-grid{ grid-template-columns: repeat(12, 1fr); gap:16px }
+    .pane{ background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03)); border:var(--outline); border-radius:var(--radius); padding:16px; box-shadow:var(--shadow) }
+    .pane-title{ font-weight:800; margin:0 0 14px }
+
+    .field{ display:flex; flex-direction:column; gap:8px; margin-bottom:12px }
+    .field label{ font-weight:600; font-size:14px }
+    .input, select{
+      width:100%; background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.16); color:var(--text);
+      padding:12px 14px; border-radius:12px; outline:none; transition: all .2s ease; font-size:14px
+    }
+    .input:focus, select:focus{ border-color:#7c3aed; box-shadow:0 0 0 4px rgba(124,58,237,.25) }
+    .hint{ color:var(--muted); font-size:12px }
+
+    /* Nominal grid */
+    .nominals{ grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); }
+    .pill{
+      background:linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.04)); border:var(--outline); padding:12px; border-radius:14px; display:flex; flex-direction:column; gap:4px; cursor:pointer; transition: all .2s ease
+    }
+    .pill:hover{ transform: translateY(-3px) }
+    .pill.selected{ outline:2px solid rgba(124,58,237,.8); box-shadow:0 0 0 6px rgba(124,58,237,.12) inset }
+    .pill .title{ font-weight:800 }
+    .pill .price{ color:var(--muted); font-size:13px }
+
+    /* Payment methods */
+    .methods{ grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); }
+    .method{ display:flex; align-items:center; gap:10px }
+    .method .badge{
+      font-size:12px; padding:6px 8px; border-radius:999px; background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.12)
+    }
+
+    /* Summary */
+    .summary-row{ display:flex; justify-content:space-between; margin:8px 0; color:var(--muted) }
+    .summary-row strong{ color:var(--text) }
+    .total{ font-size:20px; font-weight:900; display:flex; justify-content:space-between; align-items:center; margin-top:10px; padding-top:10px; border-top:1px dashed rgba(255,255,255,.15) }
+
+    .buy-btn{ width:100%; padding:14px 16px; border-radius:14px; border:0; cursor:pointer; font-weight:800; background:var(--grad-2); color:#fff;
+      box-shadow:0 18px 60px rgba(124,58,237,.35); transition:transform .12s ease, filter .25s ease }
+    .buy-btn:hover{ transform:translateY(-2px) }
+    .buy-btn:active{ transform:translateY(0) scale(.98) }
+
+    /* Footer */
+    footer{ margin-top:30px; padding:32px 0; border-top:var(--outline); background:rgba(0,0,0,.25) }
+    .socials{ display:flex; gap:10px }
+    .socials a{ padding:10px 12px; border-radius:12px; border:1px solid rgba(255,255,255,.12); background:rgba(255,255,255,.04); transition: all .2s ease }
+    .socials a:hover{ transform: translateY(-3px) }
+
+    /* Toast */
+    .toast{
+      position:fixed; right:18px; bottom:18px; z-index:60; display:flex; flex-direction:column; gap:10px
+    }
+    .toast .item{ background:rgba(17,24,39,.95); border:1px solid rgba(255,255,255,.12); color:#fff; padding:12px 14px; border-radius:12px; box-shadow:var(--shadow); transform: translateY(10px); opacity:0; animation: toast-in .35s ease forwards }
+    @keyframes toast-in{ to{ transform: translateY(0); opacity:1 }}
+
+    /* Modal */
+    .modal{ position:fixed; inset:0; display:none; place-items:center; background:rgba(3,7,18,.6); backdrop-filter: blur(6px); z-index:70 }
+    .modal.show{ display:grid }
+    .modal-card{ width:min(520px, 92vw); background:var(--card-2); border:var(--outline); border-radius:18px; padding:18px; box-shadow:var(--shadow) }
+
+    /* Loader overlay */
+    .loader{ position:fixed; inset:0; display:none; place-items:center; background:rgba(3,7,18,.6); backdrop-filter: blur(6px); z-index:80 }
+    .loader.show{ display:grid }
+    .spinner{ width:54px; height:54px; border-radius:999px; border:6px solid rgba(255,255,255,.15); border-top-color:#7c3aed; animation: spin 1s linear infinite }
+
+    /* Responsive */
+    @media (max-width: 900px){
+      .hero-grid{ grid-template-columns:1fr }
+      .hero-art{ height:260px }
+    }
+  </style>
+</head>
+<body>
+  <!-- ================= HEADER ================= -->
+  <header>
+    <div class="container nav">
+      <div class="brand">
+        <div class="logo" aria-hidden="true"></div>
+        <div>
+          <div style="font-size:18px">TopUpin</div>
+          <div class="tag">Top up game cepat & aman</div>
+        </div>
+      </div>
+      <nav>
+        <a href="#beranda">Beranda</a>
+        <a href="#cara">Cara Top Up</a>
+        <a href="#kontak">Kontak</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- ================= HERO ================= -->
+  <main id="beranda" class="hero">
+    <div class="container hero-grid">
+      <div>
+        <h1>Tingkatkan permainanmu ⚡ dengan top up instan, harga bersahabat.</h1>
+        <p>Praktis, aman, dan kilat. Pilih game favorit, masukkan ID, pilih nominal, lalu bayar dengan metode favoritmu. Diamond langsung masuk — no ribet.</p>
+        <div class="cta">
+          <a class="btn" href="#pilih-game">Mulai Top Up</a>
+          <a class="btn secondary" href="#cara">Lihat Cara</a>
+        </div>
+      </div>
+      <div class="hero-art">
+        <div class="glow" aria-hidden="true"></div>
+      </div>
+    </div>
+  </main>
+
+  <div class="container">
+    <!-- ================= GAME SELECTOR ================= -->
+    <section id="pilih-game">
+      <div class="section-title">1) Pilih Game</div>
+      <p class="muted" style="margin-top:-8px">Klik salah satu game di bawah untuk melanjutkan.</p>
+      <div class="grid games" id="gameGrid"></div>
+    </section>
+
+    <!-- ================= FORM + NOMINAL + METODE + RINGKASAN ================= -->
+    <section>
+      <div class="form-grid grid">
+        <!-- Informasi Pemain -->
+        <div class="pane" style="grid-column: span 6;" id="formPane">
+          <h3 class="pane-title">2) Data Pemain</h3>
+          <div class="field">
+            <label for="playerId">ID Player</label>
+            <input id="playerId" class="input" placeholder="Contoh: 123456789" inputmode="numeric" />
+            <div class="hint">Pastikan ID sesuai. Untuk beberapa game, tambah server ID (contoh ML: 123456789(1234)).</div>
+          </div>
+          <div class="field">
+            <label for="nickname">Nickname</label>
+            <input id="nickname" class="input" placeholder="Contoh: ProPlayer" />
+          </div>
+          <div class="field" id="serverField" style="display:none">
+            <label for="server">Server</label>
+            <select id="server"></select>
+          </div>
+        </div>
+
+        <!-- Nominal -->
+        <div class="pane" style="grid-column: span 6;">
+          <h3 class="pane-title">3) Pilih Nominal</h3>
+          <div class="grid nominals" id="nominalGrid"></div>
+        </div>
+
+        <!-- Metode Pembayaran -->
+        <div class="pane" style="grid-column: span 6;">
+          <h3 class="pane-title">4) Metode Pembayaran</h3>
+          <div class="grid methods" id="methodGrid"></div>
+        </div>
+
+        <!-- Ringkasan -->
+        <div class="pane" style="grid-column: span 6;">
+          <h3 class="pane-title">5) Ringkasan</h3>
+          <div id="summary">
+            <div class="summary-row"><span>Game</span><strong id="sumGame">-</strong></div>
+            <div class="summary-row"><span>Player</span><strong id="sumPlayer">-</strong></div>
+            <div class="summary-row"><span>Nominal</span><strong id="sumNominal">-</strong></div>
+            <div class="summary-row"><span>Metode</span><strong id="sumMethod">-</strong></div>
+            <div class="summary-row"><span>Biaya</span><strong id="sumFee">Rp0</strong></div>
+            <div class="total"><span>Total Bayar</span><strong id="sumTotal">Rp0</strong></div>
+          </div>
+          <button class="buy-btn" id="buyBtn">Beli Sekarang</button>
+          <div class="hint" style="margin-top:8px">Dengan melanjutkan, kamu setuju dengan syarat & ketentuan.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= CARA TOP UP ================= -->
+    <section id="cara">
+      <div class="section-title">Cara Top Up</div>
+      <ol class="muted" style="line-height:1.9">
+        <li>Pilih game dan masukkan data pemain dengan benar.</li>
+        <li>Pilih nominal top up dan metode pembayaran.</li>
+        <li>Cek ringkasan, lalu klik <strong>Beli Sekarang</strong>.</li>
+        <li>Seleseikan pembayaran. Diamond/koin akan otomatis dikirim.</li>
+      </ol>
+    </section>
+
+    <!-- ================= KONTAK ================= -->
+    <section id="kontak">
+      <div class="section-title">Kontak</div>
+      <p class="muted">Butuh bantuan? Hubungi kami di <a href="mailto:support@topupin.id">support@topupin.id</a>.</p>
+    </section>
+  </div>
+
+  <!-- ================= FOOTER ================= -->
+  <footer>
+    <div class="container" style="display:flex; justify-content:space-between; align-items:center; gap:12px; flex-wrap:wrap">
+      <div>© <span id="year"></span> TopUpin. All rights reserved.</div>
+      <div class="socials">
+        <a href="#" aria-label="Twitter">🐦</a>
+        <a href="#" aria-label="Instagram">📸</a>
+        <a href="#" aria-label="YouTube">▶️</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ================= TOAST / MODAL / LOADER ================= -->
+  <div class="toast" id="toast"></div>
+
+  <div class="modal" id="confirmModal" aria-hidden="true">
+    <div class="modal-card">
+      <h3 style="margin:0 0 8px; font-weight:800">Konfirmasi Pembelian</h3>
+      <p class="muted" style="margin:0 0 12px">Periksa kembali detail berikut sebelum membayar:</p>
+      <div id="confirmDetails" style="line-height:1.8"></div>
+      <div style="display:flex; gap:10px; justify-content:flex-end; margin-top:16px">
+        <button class="btn secondary" id="cancelConfirm">Batal</button>
+        <button class="btn" id="proceedPayment">Lanjutkan</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="loader" id="loader">
+    <div class="spinner" aria-label="loading"></div>
+  </div>
+
+  <!-- ================= SCRIPTS ================= -->
+  <script>
+    // ====== Data Master ======
+    const games = [
+      { id:'ml', name:'Mobile Legends', color:'#22d3ee', servers:['Global','SEA','CN','EU'] },
+      { id:'ff', name:'Free Fire', color:'#f59e0b', servers:['Global','SEA'] },
+      { id:'pubg', name:'PUBG Mobile', color:'#22c55e' },
+      { id:'gi', name:'Genshin Impact', color:'#7c3aed', servers:['Asia','America','Europe','TW/HK/MO'] },
+      { id:'val', name:'Valorant', color:'#ef4444', servers:['AP','KR','EU','NA'] },
+      { id:'hsr', name:'Honkai: Star Rail', color:'#a855f7', servers:['Asia','America','Europe'] },
+      { id:'codm', name:'Call of Duty Mobile', color:'#06b6d4' },
+      { id:'coc', name:'Clash of Clans', color:'#10b981' },
+    ];
+
+    // Nominal contoh (bisa disesuaikan per game jika mau)
+    const nominalList = [
+      { id:'n10', title:'10 Diamond', amount:10, price:3000 },
+      { id:'n50', title:'50 Diamond', amount:50, price:15000 },
+      { id:'n100', title:'100 Diamond', amount:100, price:30000 },
+      { id:'n250', title:'250 Diamond', amount:250, price:70000 },
+      { id:'n500', title:'500 Diamond', amount:500, price:130000 },
+      { id:'n1000', title:'1000 Diamond', amount:1000, price:250000 },
+      { id:'nWeekly', title:'Weekly Pass', amount:0, price:27000 },
+      { id:'nMonthly', title:'Monthly Card', amount:0, price:85000 },
+    ];
+
+    // Metode pembayaran + biaya
+    const methods = [
+      { id:'bca', group:'Bank Transfer', name:'BCA', fee:{ flat:1000 } },
+      { id:'bri', group:'Bank Transfer', name:'BRI', fee:{ flat:1000 } },
+      { id:'bni', group:'Bank Transfer', name:'BNI', fee:{ flat:1000 } },
+      { id:'mandiri', group:'Bank Transfer', name:'Mandiri', fee:{ flat:1000 } },
+      { id:'gopay', group:'E-Wallet', name:'Gopay', fee:{ pct:1.5 } },
+      { id:'ovo', group:'E-Wallet', name:'OVO', fee:{ pct:1.5 } },
+      { id:'dana', group:'E-Wallet', name:'Dana', fee:{ pct:1.5 } },
+      { id:'cc', group:'Kartu Kredit', name:'Visa/Master', fee:{ pct:3, flat:2000 } },
+    ];
+
+    // ====== Helpers ======
+    const IDR = n => new Intl.NumberFormat('id-ID',{ style:'currency', currency:'IDR', maximumFractionDigits:0 }).format(n||0);
+
+    function svgIcon(hex){
+      // Simple SVG controller-pad icon tinted by color
+      return `
+        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="2" y="7" width="20" height="10" rx="5" stroke="${hex}" stroke-width="2"/>
+          <circle cx="16.5" cy="12" r="2.5" fill="${hex}"/>
+          <path d="M8 10v4M6 12h4" stroke="${hex}" stroke-width="2" stroke-linecap="round"/>
+        </svg>`;
+    }
+
+    // ====== Renderers ======
+    const gameGrid = document.getElementById('gameGrid');
+    const nominalGrid = document.getElementById('nominalGrid');
+    const methodGrid = document.getElementById('methodGrid');
+
+    let selectedGame = null;
+    let selectedNominal = null;
+    let selectedMethod = null;
+
+    function renderGames(){
+      gameGrid.innerHTML = '';
+      games.forEach(g => {
+        const el = document.createElement('button');
+        el.className = 'card';
+        el.setAttribute('type','button');
+        el.innerHTML = `
+          <div class="icon">${svgIcon(g.color)}</div>
+          <div style="display:flex; flex-direction:column; gap:4px; align-items:flex-start">
+            <div class="label">${g.name}</div>
+            <div class="tag">Klik untuk pilih</div>
+          </div>`;
+        el.addEventListener('click', () => selectGame(g, el));
+        gameGrid.appendChild(el);
+      });
+    }
+
+    function renderNominals(){
+      nominalGrid.innerHTML = '';
+      nominalList.forEach(nm => {
+        const el = document.createElement('button');
+        el.className = 'pill';
+        el.setAttribute('type','button');
+        el.innerHTML = `
+          <div class="title">${nm.title}</div>
+          <div class="price">${IDR(nm.price)}</div>`;
+        el.addEventListener('click', () => selectNominal(nm, el));
+        nominalGrid.appendChild(el);
+      });
+    }
+
+    function renderMethods(){
+      methodGrid.innerHTML = '';
+      methods.forEach(m => {
+        const el = document.createElement('button');
+        el.className = 'card';
+        el.setAttribute('type','button');
+        el.innerHTML = `
+          <div class="icon">${svgIcon('#fff')}</div>
+          <div class="method">
+            <div>
+              <div class="label">${m.name}</div>
+              <div class="tag">${m.group}</div>
+            </div>
+            <span class="badge">Biaya ${feeLabel(m.fee)}</span>
+          </div>`;
+        el.addEventListener('click', () => selectMethod(m, el));
+        methodGrid.appendChild(el);
+      });
+    }
+
+    function feeLabel(fee){
+      const parts = [];
+      if(fee.pct) parts.push(fee.pct + '%');
+      if(fee.flat) parts.push(IDR(fee.flat));
+      return parts.join(' + ') || 'Gratis';
+    }
+
+    // ====== Selection Logic ======
+    function selectGame(game, el){
+      selectedGame = game;
+      [...gameGrid.children].forEach(c => c.classList.remove('selected'));
+      el.classList.add('selected');
+      toast(`Game dipilih: <b>${game.name}</b>`);
+      // Show server field if available
+      const serverField = document.getElementById('serverField');
+      const serverSel = document.getElementById('server');
+      if(game.servers){
+        serverField.style.display = '';
+        serverSel.innerHTML = game.servers.map(s => `<option value="${s}">${s}</option>`).join('');
+      } else {
+        serverField.style.display = 'none';
+        serverSel.innerHTML = '';
+      }
+      updateSummary();
+    }
+
+    function selectNominal(nm, el){
+      selectedNominal = nm;
+      [...nominalGrid.children].forEach(c => c.classList.remove('selected'));
+      el.classList.add('selected');
+      pulse(el);
+      updateSummary();
+    }
+
+    function selectMethod(m, el){
+      selectedMethod = m;
+      [...methodGrid.children].forEach(c => c.classList.remove('selected'));
+      el.classList.add('selected');
+      pulse(el);
+      updateSummary();
+    }
+
+    function pulse(el){
+      el.animate([
+        { transform:'scale(1)' },
+        { transform:'scale(1.03)' },
+        { transform:'scale(1)' },
+      ], { duration:300, easing:'ease-out' });
+    }
+
+    // ====== Summary / Calculation ======
+    function calcFee(base, fee){
+      let total = base;
+      let feeAmount = 0;
+      if(fee){
+        if(fee.pct){ feeAmount += base * (fee.pct/100); }
+        if(fee.flat){ feeAmount += fee.flat; }
+      }
+      total += feeAmount;
+      return { feeAmount: Math.round(feeAmount), total: Math.round(total) };
+    }
+
+    function updateSummary(){
+      const sumGame = document.getElementById('sumGame');
+      const sumPlayer = document.getElementById('sumPlayer');
+      const sumNominal = document.getElementById('sumNominal');
+      const sumMethod = document.getElementById('sumMethod');
+      const sumFee = document.getElementById('sumFee');
+      const sumTotal = document.getElementById('sumTotal');
+
+      sumGame.textContent = selectedGame ? selectedGame.name : '-';
+      const pid = document.getElementById('playerId').value.trim();
+      const nick = document.getElementById('nickname').value.trim();
+      const serverSel = document.getElementById('server');
+      const server = serverSel && serverSel.value ? ' / ' + serverSel.value : '';
+      sumPlayer.textContent = pid || nick ? `${nick || '—'} (${pid || '—'})${server}` : '-';
+      sumNominal.textContent = selectedNominal ? `${selectedNominal.title} — ${IDR(selectedNominal.price)}` : '-';
+      sumMethod.textContent = selectedMethod ? `${selectedMethod.group} • ${selectedMethod.name}` : '-';
+
+      let base = selectedNominal ? selectedNominal.price : 0;
+      const fee = selectedMethod?.fee;
+      const { feeAmount, total } = calcFee(base, fee);
+      sumFee.textContent = IDR(feeAmount);
+      sumTotal.textContent = IDR(total);
+    }
+
+    // Listen to input changes
+    ['playerId','nickname','server'].forEach(id => {
+      document.addEventListener('input', (e)=>{ if(e.target.id===id) updateSummary(); });
+      document.addEventListener('change', (e)=>{ if(e.target.id===id) updateSummary(); });
+    });
+
+    // ====== Validation ======
+    function validate(){
+      const errors = [];
+      const pid = document.getElementById('playerId').value.trim();
+      const nick = document.getElementById('nickname').value.trim();
+      const serverField = document.getElementById('serverField');
+      const serverSel = document.getElementById('server');
+
+      if(!selectedGame) errors.push('Silakan pilih game.');
+      if(!pid) errors.push('ID Player wajib diisi.');
+      if(!nick) errors.push('Nickname wajib diisi.');
+      if(serverField.style.display !== 'none' && !serverSel.value) errors.push('Pilih server.');
+      if(!selectedNominal) errors.push('Pilih nominal top up.');
+      if(!selectedMethod) errors.push('Pilih metode pembayaran.');
+
+      return errors;
+    }
+
+    // ====== Toast ======
+    const toastBox = document.getElementById('toast');
+    function toast(html){
+      const item = document.createElement('div');
+      item.className = 'item';
+      item.innerHTML = html;
+      toastBox.appendChild(item);
+      setTimeout(()=>{ item.style.opacity = '0'; item.style.transform = 'translateY(10px)'; }, 2400);
+      setTimeout(()=>{ item.remove(); }, 3000);
+    }
+
+    // ====== Modal & Loader ======
+    const modal = document.getElementById('confirmModal');
+    const confirmDetails = document.getElementById('confirmDetails');
+    document.getElementById('cancelConfirm').addEventListener('click', ()=> modal.classList.remove('show'));
+    const loader = document.getElementById('loader');
+
+    function openConfirm(){
+      const pid = document.getElementById('playerId').value.trim();
+      const nick = document.getElementById('nickname').value.trim();
+      const serverSel = document.getElementById('server');
+      const server = (serverSel && serverSel.value) ? ` / ${serverSel.value}` : '';
+      const { feeAmount, total } = calcFee(selectedNominal.price, selectedMethod.fee);
+      const orderId = 'ORD' + Date.now().toString().slice(-8);
+
+      confirmDetails.innerHTML = `
+        <div><strong>Order ID:</strong> ${orderId}</div>
+        <div><strong>Game:</strong> ${selectedGame.name}</div>
+        <div><strong>Pemain:</strong> ${nick} (${pid})${server}</div>
+        <div><strong>Nominal:</strong> ${selectedNominal.title} — ${IDR(selectedNominal.price)}</div>
+        <div><strong>Metode:</strong> ${selectedMethod.group} • ${selectedMethod.name}</div>
+        <div><strong>Biaya:</strong> ${IDR(feeAmount)}</div>
+        <div style="margin-top:6px; padding-top:6px; border-top:1px dashed rgba(255,255,255,.15)">
+          <strong>Total:</strong> ${IDR(total)}
+        </div>`;
+      modal.classList.add('show');
+    }
+
+    document.getElementById('proceedPayment').addEventListener('click', ()=>{
+      modal.classList.remove('show');
+      // Simulate payment processing
+      loader.classList.add('show');
+      setTimeout(()=>{
+        loader.classList.remove('show');
+        toast('✅ Pembayaran berhasil! Pesanan diproses.');
+        // Reset simple
+        // (Biarkan pilihan game tetap agar user bisa top up lagi cepat)
+        document.getElementById('playerId').value='';
+        document.getElementById('nickname').value='';
+        selectedNominal = null; [...nominalGrid.children].forEach(c => c.classList.remove('selected'));
+        selectedMethod = null; [...methodGrid.children].forEach(c => c.classList.remove('selected'));
+        updateSummary();
+      }, 1700);
+    });
+
+    // ====== Buy Button ======
+    document.getElementById('buyBtn').addEventListener('click', () => {
+      const errs = validate();
+      if(errs.length){
+        errs.forEach(e => toast('⚠️ ' + e));
+        return;
+      }
+      openConfirm();
+    });
+
+    // ====== Init ======
+    renderGames();
+    renderNominals();
+    renderMethods();
+    document.getElementById('year').textContent = new Date().getFullYear();
+    updateSummary();
+  </script>
+</body>
+</html>
